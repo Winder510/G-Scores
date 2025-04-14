@@ -46,8 +46,8 @@ export class StudentSeeder {
             console.log(`Found ${records.length} records in CSV file`);
 
             // Optional: Clear existing data
-            console.log('Clearing existing data...');
-            await this.prisma.student.deleteMany({});
+            // console.log('Clearing existing data...');
+            // await this.prisma.student.deleteMany({});
             console.log('Existing data cleared');
 
             console.log('Importing data...');
