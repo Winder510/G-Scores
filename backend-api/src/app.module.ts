@@ -1,10 +1,17 @@
 import { Module } from '@nestjs/common';
-import { ScoresModule } from './scores/scores.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { StudentModule } from './student/student.module';
+import { StudentSeeder } from './student/student.seeder';
 
 @Module({
-  imports: [ScoresModule, PrismaModule],
+  imports: [PrismaModule, StudentModule],
   controllers: [],
-  providers: [],
+  providers: [StudentSeeder],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private readonly seeder: StudentSeeder) {}
+
+  async onModuleInit() {
+    // await this.seeder.seed();
+  }
+}
