@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -82,10 +82,14 @@ export class StudentService {
   }
 
   async findOne(registrationNumber: string) {
-    return await this.prismaService.student.findFirst({
+    const foundStudent = await this.prismaService.student.findFirst({
       where: {
         registration_number: registrationNumber,
       },
     });
+
+    if (!foundStudent) throw new BadRequestException('Not found ');
+
+    return foundStudent;
   }
 }

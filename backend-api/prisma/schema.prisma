@@ -27,3 +27,10 @@ model Student {
   civic_education     Float?
   foreign_language_code String?
 }
+
+model Apikey{
+  id                  String  @id @default(auto()) @map("_id") @db.ObjectId
+  key                 String
+  active              Boolean @default(true)
+
+}
