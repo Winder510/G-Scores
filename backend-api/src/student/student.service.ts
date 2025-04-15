@@ -72,6 +72,8 @@ export class StudentService {
 
   async getTop10GroupAStudents() {
     try {
+      console.log('INSIDE Service');
+
       const students = await this.prismaService.student.aggregateRaw({
         pipeline: [
           {
