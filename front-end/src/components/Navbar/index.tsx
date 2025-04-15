@@ -1,8 +1,10 @@
 const Navbar = () => {
   return (
-    <nav className="bg-blue-900 text-white p-4">
-      <div className="container mx-auto">
-        <h1 className="text-2xl font-bold text-center">G-Scores</h1>
+    <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="container mx-auto px-4 py-3 flex items-center ">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white m-auto">
+          G-Scores
+        </h1>
       </div>
     </nav>
   );
