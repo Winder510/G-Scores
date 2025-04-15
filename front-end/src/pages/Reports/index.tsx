@@ -26,13 +26,33 @@ interface SubjectStatistics {
 
 const options = {
   responsive: true,
+  maintainAspectRatio: false,
   plugins: {
     legend: {
       position: "top" as const,
+      labels: {
+        font: {
+          size: 12,
+        },
+      },
     },
     title: {
       display: true,
       text: "Score Distribution by Subject",
+      font: {
+        size: 16,
+        weight: "bold",
+      },
+      padding: {
+        top: 10,
+        bottom: 20,
+      },
+    },
+    tooltip: {
+      enabled: true,
+      bodyFont: {
+        size: 12,
+      },
     },
   },
   scales: {
@@ -41,16 +61,36 @@ const options = {
       title: {
         display: true,
         text: "Number of Students",
+        font: {
+          size: 14,
+        },
+      },
+      ticks: {
+        font: {
+          size: 12,
+        },
       },
     },
     x: {
       title: {
         display: true,
         text: "Subjects",
+        font: {
+          size: 14,
+        },
+      },
+      ticks: {
+        font: {
+          size: 10,
+          autoSkip: true,
+          maxRotation: 45,
+          minRotation: 0,
+        },
       },
     },
   },
 };
+
 const Reports = () => {
   const [statistics, setStatistics] = useState<SubjectStatistics | null>(null);
   const subjects = [
@@ -122,7 +162,7 @@ const Reports = () => {
       </h1>
       {statistics ? (
         <div className="w-full h-[600px]">
-          <Bar options={options} data={chartData} />
+          <Bar options={options as any} data={chartData} />
         </div>
       ) : (
         <div className="flex items-center justify-center h-[400px]">
