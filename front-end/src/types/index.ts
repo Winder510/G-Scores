@@ -18,3 +18,30 @@ export interface StudentScore {
   geography: number;
   civic_education: number;
 }
+
+export interface ScoreLevel {
+  ">=8": number;
+  "6-8": number;
+  "4-6": number;
+  "<4": number;
+}
+
+export interface ScoreStatistics {
+  math: ScoreLevel;
+  literature: ScoreLevel;
+  foreign_language: ScoreLevel;
+  physics: ScoreLevel;
+  chemistry: ScoreLevel;
+  biology: ScoreLevel;
+  history: ScoreLevel;
+  geography: ScoreLevel;
+  civic_education: ScoreLevel;
+}
+
+export interface TopStudent {
+  registration_number: string;
+  math: number;
+  physics: number;
+  chemistry: number;
+  total: number;
+}

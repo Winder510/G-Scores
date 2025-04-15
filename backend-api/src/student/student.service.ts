@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -18,67 +19,97 @@ export class StudentService {
   ];
 
   async getScoreStatistics() {
-    const students = await this.prismaService.student.findMany();
-
-    const levels = {
-      '>=8': (score: number) => score >= 8,
-      '6-8': (score: number) => score >= 6 && score < 8,
-      '4-6': (score: number) => score >= 4 && score < 6,
-      '<4': (score: number) => score < 4,
-    };
-
     const result = {};
 
     for (const subject of this.subjects) {
-      result[subject] = { '>=8': 0, '6-8': 0, '4-6': 0, '<4': 0 };
+      const [gte8, range6to8, range4to6, lt4] = await Promise.all([
+        this.prismaService.student.count({
+          where: {
+            [subject]: {
+              not: null,
+              gte: 8,
+            },
+          },
+        }),
+        this.prismaService.student.count({
+          where: {
+            [subject]: {
+              not: null,
+              gte: 6,
+              lt: 8,
+            },
+          },
+        }),
+        this.prismaService.student.count({
+          where: {
+            [subject]: {
+              not: null,
+              gte: 4,
+              lt: 6,
+            },
+          },
+        }),
+        this.prismaService.student.count({
+          where: {
+            [subject]: {
+              not: null,
+              lt: 4,
+            },
+          },
+        }),
+      ]);
 
-      for (const student of students) {
-        const score = student[subject];
-        if (typeof score === 'number') {
-          for (const level in levels) {
-            if (levels[level](score)) {
-              result[subject][level]++;
-              break;
-            }
-          }
-        }
-      }
+      result[subject] = {
+        '>=8': gte8,
+        '6-8': range6to8,
+        '4-6': range4to6,
+        '<4': lt4,
+      };
     }
 
     return result;
   }
 
   async getTop10GroupAStudents() {
-    const students = await this.prismaService.student.findMany();
-    console.log(
-      '🚀 ~ StudentService ~ getTop10GroupAStudents ~ students:',
-      students,
-    );
+    try {
+      const students = await this.prismaService.student.aggregateRaw({
+        pipeline: [
+          {
+            $match: {
+              math: { $ne: null },
+              physics: { $ne: null },
+              chemistry: { $ne: null },
+            },
+          },
+          {
+            $addFields: {
+              total: { $add: ['$math', '$physics', '$chemistry'] },
+            },
+          },
+          {
+            $sort: { total: -1 },
+          },
+          {
+            $limit: 10,
+          },
+          {
+            $project: {
+              _id: 0,
+              registration_number: 1,
+              math: 1,
+              physics: 1,
+              chemistry: 1,
+              total: 1,
+            },
+          },
+        ],
+      });
 
-    const ranked = students
-      .map((student) => {
-        const { math, physics, chemistry } = student;
-        const scores = [math, physics, chemistry];
-        if (scores.every((s) => typeof s === 'number')) {
-          const avg = (math + physics + chemistry) / 3;
-          return { ...student, avg };
-        }
-        return null;
-      })
-      .filter(Boolean)
-      .sort((a, b) => b.avg - a.avg)
-      .slice(0, 10);
-
-    return ranked.map(
-      ({ id, registration_number, math, physics, chemistry, avg }) => ({
-        id,
-        registration_number,
-        math,
-        physics,
-        chemistry,
-        avg: parseFloat(avg.toFixed(2)),
-      }),
-    );
+      return students;
+    } catch (error) {
+      console.error('Error fetching top 10 students:', error);
+      throw new Error('Could not fetch top students');
+    }
   }
 
   async findOne(registrationNumber: string) {
