@@ -32,4 +32,29 @@ export class TaskService {
       this.logger.error('Error during nightly cache update:', error);
     }
   }
+
+  @Cron('0 */10 * * * *')
+  async handleToBlockServerSleepWhenDeploy() {
+    this.logger.log('Sending request to keep server awake...');
+
+    try {
+      const response = await fetch(
+        process.env.SERVER_URL + `/student/find/10000001`,
+      );
+
+      if (response.ok) {
+        this.logger.log('Request sent successfully to keep the server awake.');
+      } else {
+        this.logger.error(
+          'Failed to keep the server awake, status:',
+          response.status,
+        );
+      }
+    } catch (error) {
+      this.logger.error(
+        'Error while sending request to keep the server awake:',
+        error,
+      );
+    }
+  }
 }

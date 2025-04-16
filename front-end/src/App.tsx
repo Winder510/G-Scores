@@ -6,6 +6,7 @@ import Search from "./pages/Search";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import { Toaster } from "react-hot-toast";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
               <Route path="/reports" element={<Reports />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
       </ThemeProvider>
