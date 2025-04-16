@@ -39,7 +39,7 @@ export class TaskService {
 
     try {
       const response = await fetch(
-        process.env.SERVER_URL + `/student/find/10000001`,
+        process.env.SERVER_URL + `/api/v1/student/find/1000001`,
       );
 
       if (response.ok) {
