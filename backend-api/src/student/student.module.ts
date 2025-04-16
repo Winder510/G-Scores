@@ -6,5 +6,6 @@ import { ApiKeyService } from 'src/api-key/api-key.service';
 @Module({
   controllers: [StudentController],
   providers: [StudentService, ApiKeyService],
+  exports: [StudentService],
 })
 export class StudentModule {}

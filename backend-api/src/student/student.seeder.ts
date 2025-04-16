@@ -46,13 +46,13 @@ export class StudentSeeder {
             console.log(`Found ${records.length} records in CSV file`);
 
             // Optional: Clear existing data
-            // console.log('Clearing existing data...');
+            console.log('Clearing existing data...');
             // await this.prisma.student.deleteMany({});
             console.log('Existing data cleared');
 
             console.log('Importing data...');
 
-            const batchSize = 10000;
+            const batchSize = 100000;
             let successCount = 0;
             let errorCount = 0;
 
