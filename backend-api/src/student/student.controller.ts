@@ -14,6 +14,11 @@ import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
+  @Get()
+  getHello() {
+    return 'Hello student from server';
+  }
+
   @Get('find/:registrationNumber')
   @ResponseMessage('Find success')
   @UseGuards(ApiKeyGuard)

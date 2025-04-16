@@ -38,9 +38,7 @@ export class TaskService {
     this.logger.log('Sending request to keep server awake...');
 
     try {
-      const response = await fetch(
-        process.env.SERVER_URL + `/api/v1/student/find/1000001`,
-      );
+      const response = await fetch(process.env.SERVER_URL + `/api/v1/student`);
 
       if (response.ok) {
         this.logger.log('Request sent successfully to keep the server awake.');
