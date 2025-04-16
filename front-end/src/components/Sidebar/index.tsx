@@ -10,7 +10,7 @@ import {
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
 import { useTheme } from "../../contexts/ThemeContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface MenuItem {
   label: string;
@@ -45,6 +45,22 @@ const Sidebar = () => {
       icon: <Cog6ToothIcon className="w-6 h-6" />,
     },
   ];
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsOpen(false);
+      } else {
+        setIsOpen(true);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
