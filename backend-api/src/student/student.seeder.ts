@@ -21,6 +21,8 @@ export class StudentSeeder {
       console.error(`Error: CSV file not found at ${csvFilePath}`);
       throw new Error(`CSV file not found at ${csvFilePath}`);
     }
+    const studentLength = await this.prisma.student.count();
+    if (studentLength > 0) return;
 
     console.log(`Reading CSV file from ${csvFilePath}`);
     const csvData = fs.readFileSync(csvFilePath, 'utf-8');
@@ -45,9 +47,6 @@ export class StudentSeeder {
 
             console.log(`Found ${records.length} records in CSV file`);
 
-            // Optional: Clear existing data
-            console.log('Clearing existing data...');
-            // await this.prisma.student.deleteMany({});
             console.log('Existing data cleared');
 
             console.log('Importing data...');
